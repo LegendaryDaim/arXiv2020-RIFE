@@ -1,16 +1,17 @@
-import os
-import cv2
-import torch
-import argparse
-import numpy as np
-from tqdm import tqdm
+from queue import Queue
 from torch.nn import functional as F
-import warnings
+from tqdm import tqdm
 import _thread
-import skvideo.io
-from queue import Queue, Empty
+import argparse
+import cv2
 import moviepy.editor
+import numpy as np
+import os
 import shutil
+import skvideo.io
+import time
+import torch
+import warnings
 
 
 def transferAudio(sourceVideo, targetVideo):
@@ -49,7 +50,6 @@ def transferAudio(sourceVideo, targetVideo):
 
     # remove temp directory
     shutil.rmtree("temp")
-
 
 
 warnings.filterwarnings("ignore")
@@ -97,7 +97,8 @@ if args.png:
 else:
     video_path_wo_ext, ext = os.path.splitext(args.video)
     vid_out = cv2.VideoWriter('{}_{}X_{}fps.{}'.format(video_path_wo_ext, args.exp, int(np.round(args.fps)), args.ext), fourcc, args.fps, (w, h))
-    
+
+
 def clear_buffer(user_args, buffer):
     cnt = 0
     while True:
@@ -109,7 +110,8 @@ def clear_buffer(user_args, buffer):
             cnt += 1
         else:
             vid_out.write(item[:, :, ::-1])
-            
+
+
 if args.montage:
     left = w // 4
     w = w // 2
@@ -170,7 +172,8 @@ if args.montage:
     buffer.put(np.concatenate((lastframe, lastframe), 1))
 else:
     buffer.put(lastframe)
-import time
+
+
 while not buffer.empty():
     time.sleep(0.1)
 pbar.close()
