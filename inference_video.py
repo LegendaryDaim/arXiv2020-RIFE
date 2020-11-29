@@ -12,6 +12,7 @@ from queue import Queue, Empty
 import moviepy.editor
 import shutil
 
+
 def transferAudio(sourceVideo, targetVideo):
 
     tempAudioFileName = "./temp/audio.mp3"
@@ -145,10 +146,10 @@ for frame in videogen:
         mid1 = model.inference(I0, I1)
         if args.exp == 4:
             mid = model.inference(torch.cat((I0, mid1), 0), torch.cat((mid1, I1), 0))
-        mid1 = (((mid1[0] * 255.).byte().cpu().detach().numpy().transpose(1, 2, 0)))
+        mid1 = ((mid1[0] * 255.).byte().cpu().detach().numpy().transpose(1, 2, 0))
         if args.exp == 4:
-            mid0 = (((mid[0] * 255.).byte().cpu().detach().numpy().transpose(1, 2, 0)))
-            mid2 = (((mid[1] * 255.).byte().cpu().detach().numpy().transpose(1, 2, 0)))
+            mid0 = ((mid[0] * 255.).byte().cpu().detach().numpy().transpose(1, 2, 0))
+            mid2 = ((mid[1] * 255.).byte().cpu().detach().numpy().transpose(1, 2, 0))
     if args.montage:
         buffer.put(np.concatenate((lastframe, lastframe), 1))
         if args.exp == 4:
@@ -170,7 +171,7 @@ if args.montage:
 else:
     buffer.put(lastframe)
 import time
-while(not buffer.empty()):
+while not buffer.empty():
     time.sleep(0.1)
 pbar.close()
 if not vid_out is None:
